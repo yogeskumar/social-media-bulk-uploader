@@ -1,7 +1,6 @@
 // src/Content.js
 import React, {useContext} from "react";
 import { Typography, Container } from "@mui/material";
-import VideoUploader from "../VideoUploader/VideoUploader";
 import { GlobalContentContext } from "../../HandlingContext/ContentContext";
 import Analytics from './Sections/Analytics/Analytics';
 import Upload from './Sections/Upload/Upload';

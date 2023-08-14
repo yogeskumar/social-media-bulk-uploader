@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from "react";
 import firebase from "firebase/compat/app";
 import "firebase/compat/database";
-import { Grid, Container } from "@mui/material";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../../../../firebase";
 import firebaseConfig from "../../../../firebaseConfig";
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
+import Button from '@mui/material/Button';
 import {
-    getFirestore,
     query,
     getDocs,
     collection,
-    where,
-    addDoc,
-    serverTimestamp
+    orderBy,
+    addDoc
 } from "firebase/firestore";
+import './style.css'
+import SchedulePopup from "./SchedulePopup";
+import { serverTimestamp } from 'firebase/firestore';
+
 // Initialize Firebase
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
@@ -21,18 +25,34 @@ if (!firebase.apps.length) {
 const Schedule = () => {
   const [videos, setVideos] = useState([]);
   const [user] = useAuthState(auth);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [scheduleData, setScheduleData] = useState({
+    instagram: { date: '', time: '', caption: '' },
+    youtube: { date: '', time: '', caption: '' },
+    tiktok: { date: '', time: '', caption: '' },
+  });
+  useEffect(() => {
+    let timer;
+
+    if (isPlaying && !isHovered) {
+      timer = setTimeout(() => {
+        setIsPlaying(false);
+      }, 3000);
+    }
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [isPlaying, isHovered]);
 
   useEffect(() => {
     // Function to fetch all videos from Firebase Realtime Database
     const fetchVideos = async () => {
       try {
-        // const snapshot = await firebase.database().ref(`${user.uid}/uploads`).once("value");
-        // const data = snapshot.val();
-        // if (data) {
-        //   // Convert the data object into an array of video URLs
-        //   const videoUrls = Object.values(data).map((videoData) => videoData.url);
-        //   setVideos(videoUrls);
-        const q = query(collection(db, user.uid, user.uid, "uploads"));
+        const q = query(collection(db, user.uid, user.uid, "uploads"),
+        orderBy("timestamp", "desc"));
 
         // Get the documents that match the query
         const querySnapshot = await getDocs(q);
@@ -42,7 +62,7 @@ const Schedule = () => {
 
         // Update the state with the video URLs
         setVideos(urls);
-        console.log(urls)
+        // console.log(urls)
         
       } catch (error) {
         console.error("Error fetching videos:", error);
@@ -51,18 +71,80 @@ const Schedule = () => {
 
     fetchVideos(); // Call the function to fetch videos when the component mounts
   }, [user.uid]);
+  const handleVideoClick = (event) => {
+    const video = event.target;
+    setIsPlaying(!isPlaying);
+    try{
+    if (video.paused) {
+      video.play();
+    } else {
+      video.pause();
+    }
+  }catch(err){
+      alert('Unsupported video format')
+    }
+    // console.log(video)
+  };
+
+  const handleScheduleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleInputChange = (platform, field, value) => {
+    setScheduleData((prevData) => ({
+      ...prevData,
+      [platform]: {
+        ...prevData[platform],
+        [field]: value,
+      },
+    }));
+  };
+
+  const handleSave = async (videourl) => {
+    // Save scheduleData to Firebase or perform any necessary action
+    try{
+      await addDoc(collection(db, `${user.uid}`, `${user.uid}`, "scheduled"), {
+        url:videourl,
+        ...scheduleData,
+        timestamp: serverTimestamp(),
+      });
+      alert("data uploaded successfully")
+    }catch(err){
+      alert("data unuploaded unsuccessfully")
+      console.error(err)
+    }
+    setOpen(false);
+  };
 
   return (
-    <Container maxWidth="md">
-      <Grid container spacing={2}>
-        {videos.map((videoUrl) => (
-          <Grid item xs={12} sm={6} md={4} key={videoUrl}>
-            {/* Replace the <video> tag with your video player component */}
-            <video src={videoUrl} controls width="100%" height="auto" />
-          </Grid>
-        ))}
-      </Grid>
-    </Container>
+    <div className="app__videos"
+    onMouseEnter={() => setIsHovered(true)}
+    onMouseLeave={() => setIsHovered(false)}>
+      {videos.map((videourl) => (
+      <div className="video">        
+        <video className="video__player" src={videourl} onClick={handleVideoClick} />
+        <button className={`video__control ${isPlaying ? 'playing' : ''}`} onClick={handleVideoClick}
+          style={{ opacity: isPlaying || isHovered ? 1 : 0 }}>
+          {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
+        </button>
+      <Button variant="contained" style={{width:'50%'}} 
+        onClick={handleScheduleClick}
+      >Schedule</Button>
+      {/* Schedule Popup */}
+      <SchedulePopup
+        open={open}
+        onClose={handleClose}
+        onSave={()=>handleSave(videourl)}
+        scheduleData={scheduleData}
+        handleInputChange={handleInputChange}
+      />
+      </div>
+          ))}
+    </div>
   );
 };
 

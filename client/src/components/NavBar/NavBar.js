@@ -40,7 +40,7 @@ function Navbar() {
       const doc = await getDocs(q);
       const data = doc.docs[0].data();
       setName(data.name);
-      console.log("Name found->", data.name);
+      // console.log("Name found->", data);
     } catch (err) {
       console.error(err);
       alert("An error occured while fetching user data");
@@ -50,10 +50,11 @@ function Navbar() {
     if (loading) return;
     if (!user) return navigate("/");
     fetchUserName();
+    console.log(user)
   }, [user, loading]);
 
   return (
-    <AppBar>
+    user?<AppBar>
       <Container maxWidth="xl">
         <Toolbar className="navbar">
       <div className="options">
@@ -132,13 +133,14 @@ function Navbar() {
             textDecoration: "none",
           }}
         >
+          {/* {name} */}
           Logout
         </Typography>
         <LogoutIcon fontSize='large' sx={{ mr: 2 }} />
       </Box>
       </Toolbar>
       </Container>
-    </AppBar >
+    </AppBar >:<></>
   );
 }
 export default Navbar;

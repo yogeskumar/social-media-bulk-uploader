@@ -25,15 +25,30 @@
 .dashboard div {
   margin-top: 7px;
 }
-.test{
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-  align-content: center;
+
+.dashboard {
+  min-height: 100vh;
 }
-.test1{
+
+.dashboard__content {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: row;
+  flex-grow: 1;
+  overflow: hidden;
+  min-width: 300px;
+}
+
+.dashboard__main {
+  flex-grow: 1;
+  padding: 16px;
+  overflow: auto;
+}
+
+.dashboard__content {
+  flex-basis: 280px; 
+}
+
+@media (max-width: 768px) {
+  .dashboard__content {
+    flex-basis: auto; 
+  }
 }

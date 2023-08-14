@@ -1,0 +1,98 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    max-width: 25rem;
+    width: 95%;
+  }
+  
+  h1 {
+    font-size: 1.5em;
+    margin-bottom: 0.75em;
+  }
+  
+  p {
+    font-size: 0.75em;
+    margin-bottom: 1.75em;
+    margin-top: 0;
+  }
+  
+  input {
+    font-family: inherit;
+    font-size: inherit;
+  }
+  
+  label {
+    background-color: white;
+    border-radius: 0.75em;
+    box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    display: block;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    padding: 2em 3em;
+    text-align: center;
+  }
+  
+  .output {
+    border-radius: 0.75em;
+    display: flex;
+    max-width: 95vw;
+    overflow-x: auto;
+  }
+  
+  .output a {
+    border-radius: inherit;
+    display: block;
+  }
+  
+  .output a + a {
+    margin-left: 0.25rem;
+  }
+  
+  .output img {
+    border-radius: inherit;
+    width: 15rem;
+  }
+  
+  .visually-hidden {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+  
+  .offscreen-canvas {
+    backface-visibility: hidden;
+    position: absolute;
+    transform: rotateY(180deg);
+  }
+  @keyframes waterFill {
+    0% {
+      height: 0;
+    }
+    100% {
+      height: 100%;
+    }
+  }
+  
+  .water-fill {
+    position: relative;
+    width: 30%;
+    /* height: 100px; */
+    background-color: #9bd5ff;
+    overflow: hidden;
+  }
+  
+  .water {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 0;
+    background-color: #0077CC;
+    animation: waterFill 3s linear infinite;
+  }
+  
