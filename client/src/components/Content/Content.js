@@ -15,7 +15,7 @@ import './style.css'
 const Content = () => {
   const {content} = useContext(GlobalContentContext)
   return (
-    <Container>
+    <Container style={{width:'100%'}}>
       {/* <Typography variant="h4" gutterBottom className="welcome">
         Welcome to the Dashboard
       </Typography> */}

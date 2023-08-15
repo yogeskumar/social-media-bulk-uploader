@@ -106,6 +106,7 @@ const Schedule = () => {
 
   const handleSave = async (videourl) => {
     // Save scheduleData to Firebase or perform any necessary action
+    console.log(videourl)
     try{
       await addDoc(collection(db, `${user.uid}`, `${user.uid}`, "scheduled"), {
         url:videourl,
@@ -125,15 +126,15 @@ const Schedule = () => {
     onMouseEnter={() => setIsHovered(true)}
     onMouseLeave={() => setIsHovered(false)}>
       {videos.map((videourl) => (
-      <div className="video">        
+      <div className="video">  
+      <Button variant="contained" style={{width:'10%'}} 
+        onClick={handleScheduleClick}
+      >Schedule</Button>      
         <video className="video__player" src={videourl} onClick={handleVideoClick} />
         <button className={`video__control ${isPlaying ? 'playing' : ''}`} onClick={handleVideoClick}
           style={{ opacity: isPlaying || isHovered ? 1 : 0 }}>
           {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
         </button>
-      <Button variant="contained" style={{width:'50%'}} 
-        onClick={handleScheduleClick}
-      >Schedule</Button>
       {/* Schedule Popup */}
       <SchedulePopup
         open={open}

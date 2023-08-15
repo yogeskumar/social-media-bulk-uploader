@@ -7,7 +7,7 @@
     scroll-snap-type: y mandatory;
   }
   body {
-    overflow: hidden; /* Hide scrollbars */
+    overflow: hidden; 
   }
   
   /* body {
@@ -19,11 +19,11 @@
   } */
   
   .app__videos {
-    position: relative;
+    /* position: relative; */
     height: 85vh;
-    background-color: white;
+    background-color: #d7e4f0;
     overflow: scroll;
-    width: 100%;
+    width: 80vw;
     /* max-width: 400px; */
     scroll-snap-type: y mandatory;
     border-radius: 20px;
