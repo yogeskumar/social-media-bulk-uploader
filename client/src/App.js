@@ -8,6 +8,10 @@ import { GlobalContentProvider } from "./HandlingContext/ContentContext";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {auth} from './firebase';
 import { useEffect } from "react";
+import { GlobalUrlToScheduleProvider } from "./HandlingContext/UrlToSchedule";
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
+import SocialAuthentication from "./pages/SocialAuthentication/SocialAuthentication";
 function App() {
   const [user] = useAuthState(auth);
   useEffect(()=>{
@@ -18,14 +22,19 @@ function App() {
 
   return (
     <div className="app">
-      <GlobalContentProvider><Router>
+      <GlobalContentProvider>
+        <GlobalUrlToScheduleProvider>
+        <Router>
           <Routes>
             <Route exact path="/register" element={<Register />} />
             <Route exact path="/reset" element={<Reset />} />
             <Route exact path="/dashboard" element={<Dashboard />} />
+            <Route exact path="/socialauthentication" element={<SocialAuthentication />} />
             <Route exact path="/" element={<Login />} />
+            {/* <Route exact path="/*" element={<NotFoundPage />} /> */}
           </Routes>
         </Router>
+        </GlobalUrlToScheduleProvider>
       </GlobalContentProvider>
     </div>
   );

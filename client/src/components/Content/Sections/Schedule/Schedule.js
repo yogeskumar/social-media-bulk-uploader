@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import firebase from "firebase/compat/app";
 import "firebase/compat/database";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -17,12 +17,14 @@ import {
 import './style.css'
 import SchedulePopup from "./SchedulePopup";
 import { serverTimestamp } from 'firebase/firestore';
+import { GlobalUrlToScheduleContext } from "../../../../HandlingContext/UrlToSchedule";
 
 // Initialize Firebase
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 const Schedule = () => {
+  const {urlToSchedule, setUrltoschedule} = useContext(GlobalUrlToScheduleContext)
   const [videos, setVideos] = useState([]);
   const [user] = useAuthState(auth);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -62,7 +64,7 @@ const Schedule = () => {
 
         // Update the state with the video URLs
         setVideos(urls);
-        // console.log(urls)
+        console.log('Video urls fetched->', urls)
         
       } catch (error) {
         console.error("Error fetching videos:", error);
@@ -86,8 +88,9 @@ const Schedule = () => {
     // console.log(video)
   };
 
-  const handleScheduleClick = () => {
+  const handleScheduleClick = (item) => {
     setOpen(true);
+    setUrltoschedule(item)
   };
 
   const handleClose = () => {
@@ -106,14 +109,14 @@ const Schedule = () => {
 
   const handleSave = async (videourl) => {
     // Save scheduleData to Firebase or perform any necessary action
-    console.log(videourl)
+    console.log(urlToSchedule)
     try{
       await addDoc(collection(db, `${user.uid}`, `${user.uid}`, "scheduled"), {
-        url:videourl,
+        url:urlToSchedule,
         ...scheduleData,
         timestamp: serverTimestamp(),
       });
-      alert("data uploaded successfully")
+      alert("Video scheduled successfully")
     }catch(err){
       alert("data unuploaded unsuccessfully")
       console.error(err)
@@ -125,12 +128,12 @@ const Schedule = () => {
     <div className="app__videos"
     onMouseEnter={() => setIsHovered(true)}
     onMouseLeave={() => setIsHovered(false)}>
-      {videos.map((videourl) => (
-      <div className="video">  
+      {videos.map((item) => (
+      <div className="video" key={item}>  
       <Button variant="contained" style={{width:'10%'}} 
-        onClick={handleScheduleClick}
+        onClick={()=>handleScheduleClick(item)}
       >Schedule</Button>      
-        <video className="video__player" src={videourl} onClick={handleVideoClick} />
+        <video className="video__player" src={item} onClick={handleVideoClick} />
         <button className={`video__control ${isPlaying ? 'playing' : ''}`} onClick={handleVideoClick}
           style={{ opacity: isPlaying || isHovered ? 1 : 0 }}>
           {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
@@ -139,9 +142,10 @@ const Schedule = () => {
       <SchedulePopup
         open={open}
         onClose={handleClose}
-        onSave={()=>handleSave(videourl)}
+        onSave={(value)=>handleSave(value)}
         scheduleData={scheduleData}
         handleInputChange={handleInputChange}
+        item={item}
       />
       </div>
           ))}

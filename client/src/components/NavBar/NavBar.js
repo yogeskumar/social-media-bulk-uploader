@@ -7,6 +7,7 @@ import { query, collection, getDocs, where } from "firebase/firestore";
 import "./NavBar.css";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
+import { Link } from 'react-router-dom';
 
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -18,7 +19,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import MenuItem from "@mui/material/MenuItem";
 
-const pages = ["Dashboard", "Profile", "About"];
+const pages = [{name:'Dashboard', link:'/dashboard'},{name:'Connected Apps', link:'/socialauthentication'}];
 
 function Navbar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -88,16 +89,16 @@ function Navbar() {
             }}
           >
             {pages.map((page) => (
-              <MenuItem key={page} onClick={handleCloseNavMenu}>
-                <Typography textAlign="center">{page}</Typography>
+              <MenuItem key={page.name} onClick={handleCloseNavMenu}>
+                <Link to={page.link}><Typography textAlign="center">{page.name}</Typography></Link>
               </MenuItem>
             ))}
           </Menu>
         </Box>
         <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
           {pages.map((page) => (
-            <Typography
-            key={page}
+            <Link to={page.link}><Typography
+            key={page.name}
             variant="h5"
             noWrap
             sx={{
@@ -109,9 +110,10 @@ function Navbar() {
               color: "inherit",
               textDecoration: "none",
             }}
+            // onClick={navigate(page.link)}
             >
-              {page}
-            </Typography>
+              {page.name}
+            </Typography></Link>
           ))}
         </Box>
       </div>

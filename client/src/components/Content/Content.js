@@ -7,7 +7,7 @@ import Upload from './Sections/Upload/Upload';
 import Schedule from './Sections/Schedule/Schedule';
 import Scheduled from './Sections/Scheduled/Scheduled';
 import Profile from './Sections/Profile/Profile';
-import Settings from './Sections/Settings/Settings';
+// import Settings from './Sections/Settings/Settings';
 import Help from './Sections/Help/Help';
 import Pricing from './Sections/Pricing/Pricing';
 import './style.css'
@@ -24,7 +24,7 @@ const Content = () => {
       {content === 'schedule' && <Schedule />}
       {content === 'scheduled' && <Scheduled />}
       {content === 'profile' && <Profile />}
-      {content === 'settings' && <Settings />}
+      {/* {content === 'settings' && <Settings />} */}
       {content === 'help' && <Help />}
       {content === 'pricing' && <Pricing />}
             {/* <VideoUploader/> */}

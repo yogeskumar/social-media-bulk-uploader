@@ -25,9 +25,9 @@ const Settings = () => {
             <TextField label="YouTube API Key" variant="outlined" fullWidth />
           </Grid>
           <Grid item xs={12}>
-            <Button type="submit" variant="contained" color="primary" fullWidth>
+            {/* <Button type="submit" variant="contained" color="primary" fullWidth>
               Submit
-            </Button>
+            </Button> */}
           </Grid>
         </Grid>
       </form>
@@ -36,3 +36,4 @@ const Settings = () => {
 };
 
 export default Settings;
+

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button } from '@mui/material';
 
-const SchedulePopup = ({ open, onClose, onSave, scheduleData, handleInputChange }) => {
+const SchedulePopup = ({ open, onClose, onSave, scheduleData, handleInputChange, item }) => {
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Schedule Video</DialogTitle>
@@ -35,7 +35,7 @@ const SchedulePopup = ({ open, onClose, onSave, scheduleData, handleInputChange 
         <Button onClick={onClose} color="primary">
           Cancel
         </Button>
-        <Button onClick={onSave} color="primary">
+        <Button onClick={()=>onSave(item)} color="primary">
           Save
         </Button>
       </DialogActions>

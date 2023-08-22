@@ -10,7 +10,7 @@ import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
-
+import { useNavigate } from "react-router-dom";
 import './SideBar.css';
 import { GlobalContentContext } from "../../HandlingContext/ContentContext";
 
@@ -25,6 +25,7 @@ const SidebarWrapper = styled(Drawer)(({ theme }) => ({
 }));
 
 const Sidebar = () => {
+  const navigate = useNavigate();
   const {content, setContent} = useContext(GlobalContentContext)
   return (
     <SidebarWrapper variant="permanent" className="sidebar">
@@ -60,11 +61,11 @@ const Sidebar = () => {
           </ListItemIcon>
           <ListItemText primary="Profile" />
         </ListItemButton>
-        <ListItemButton onClick={()=>setContent('settings')}>
+        <ListItemButton onClick={()=>navigate('/socialauthentication')}>
           <ListItemIcon>
             <SettingsIcon />
           </ListItemIcon>
-          <ListItemText primary="Settings" />
+          <ListItemText primary="Connected Apps" />
         </ListItemButton>
         <ListItemButton onClick={()=>setContent('help')}>
           <ListItemIcon>

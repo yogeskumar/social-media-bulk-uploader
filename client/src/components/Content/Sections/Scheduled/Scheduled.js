@@ -12,23 +12,34 @@ import {
   TableBody,
   TextField,
 } from "@mui/material";
-import './style.css';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import PauseIcon from '@mui/icons-material/Pause';
+import "./style.css";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PauseIcon from "@mui/icons-material/Pause";
 
 function Scheduled() {
   const [user, loading, error] = useAuthState(auth);
   const [scheduledData, setScheduleddata] = useState([]);
   const fetchUserName = async () => {
     try {
-      const querySnapshot = await getDocs(
-        collection(db, `${user.uid}`, `${user.uid}`, "scheduled")
-      );
-      if (querySnapshot.docs[0].data()) {
-        setScheduleddata(querySnapshot.docs);
-        console.log(querySnapshot.docs[1].data().instagram.date);
-        // setProfileData(querySnapshot.docs[0].data())
-      }
+      const q = query(collection(db, user.uid, user.uid, "scheduled"));
+
+      // Get the documents that match the query
+      const querySnapshot = await getDocs(q);
+
+      // Extract the URLs from the documents and store them in an array
+      const allData = querySnapshot.docs.map((doc) => doc.data());
+
+      // Update the state with the video URLs
+      setScheduleddata(allData);
+      console.log(allData);
+      // const querySnapshot = await getDocs(
+      //   collection(db, `${user.uid}`, `${user.uid}`, "scheduled")
+      // );
+      // if (querySnapshot.docs[0].data()) {
+      //   setScheduleddata(querySnapshot.docs);
+      //   console.log(querySnapshot.docs[1].data().instagram.date);
+      //   // setProfileData(querySnapshot.docs[0].data())
+      // }
     } catch (err) {
       console.error(err);
       // alert("An error occured while fetching user data");
@@ -43,7 +54,7 @@ function Scheduled() {
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  
+
   useEffect(() => {
     let timer;
 
@@ -61,16 +72,16 @@ function Scheduled() {
   const handleVideoClick = (event) => {
     const video = event.target;
     setIsPlaying(!isPlaying);
-    try{
-    if (video.paused) {
-      video.play();
-    } else {
-      video.pause();
-    }
-  }catch(err){
-      alert('Unsupported video format')
-    }
-    // console.log(video)
+      try{
+      if (video.paused) {
+        video.play();
+      } else {
+        video.pause();
+      }
+    }catch(err){
+        alert('Unsupported video format')
+      }
+    console.log(video)
   };
 
   return (
@@ -86,66 +97,77 @@ function Scheduled() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {scheduledData?.map((video, index) => (
+            {scheduledData?.map((video_data, index) => (
               <TableRow key={index}>
                 <TableCell>
-                 
-                {[video.data().url].map((videourl) => (
-                      <div className="video_i"
+                  <div
+                    className="video_i"
                     onMouseEnter={() => setIsHovered(true)}
-                    onMouseLeave={() => setIsHovered(false)}>
-                        <video
-                          className="video__player_i"
-                          src={videourl}
-                          onClick={handleVideoClick}
-                        />
-                        <button className={`video__control_i ${isPlaying ? 'playing' : ''}`} onClick={handleVideoClick}
-                          style={{ opacity: isPlaying || isHovered ? 1 : 0 }}>
-                          {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
-                        </button>
-                      </div>
-                    ))}                </TableCell>
-                <TableCell>
-                  <TextField
-                    disabled
-                    fullWidth
-                    type="date"
-                    value={video.data().instagram.date}
-                  />
-                  <TextField
-                    disabled
-                    fullWidth
-                    type="time"
-                    value={video.data().instagram.time}
-                  />
+                    onMouseLeave={() => setIsHovered(false)}
+                  >
+                    <video
+                      className="video__player_i"
+                      src={video_data.url}
+                      onClick={handleVideoClick}
+                      type='video/mp4'
+                      width={200}
+                      height='auto'
+                    />
+                    <button
+                      className={`video__control_i ${
+                        isPlaying ? "playing" : ""
+                      }`}
+                      onClick={handleVideoClick}
+                      style={{ opacity: isPlaying || isHovered ? 1 : 0 }}
+                    >
+                      {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
+                    </button>
+                  </div>{" "}
                 </TableCell>
                 <TableCell>
                   <TextField
                     disabled
                     fullWidth
                     type="date"
-                    value={video.data().youtube.date}
+                    value={video_data.instagram.date}
                   />
                   <TextField
                     disabled
                     fullWidth
                     type="time"
-                    value={video.data().youtube.time}
+                    value={video_data.instagram.time}
                   />
+                  <div>{video_data.instagram.caption}</div>
                 </TableCell>
                 <TableCell>
                   <TextField
                     disabled
                     fullWidth
                     type="date"
-                    value={video.data().tiktok.date}
+                    value={video_data.youtube.date}
                   />
                   <TextField
                     disabled
                     fullWidth
                     type="time"
-                    value={video.data().tiktok.time}
+                    value={video_data.youtube.time}
                   />
+                  <div>{video_data.youtube.caption}</div>
+                </TableCell>
+                <TableCell>
+                  <TextField
+                    disabled
+                    fullWidth
+                    type="date"
+                    value={video_data.tiktok.date}
+                  />
+                  <TextField
+                    disabled
+                    fullWidth
+                    type="time"
+                    value={video_data.tiktok.time}
+                  />
+                  <div>{video_data.tiktok.caption}</div>
                 </TableCell>
               </TableRow>
             ))}
